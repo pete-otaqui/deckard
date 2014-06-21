@@ -1,5 +1,9 @@
 (function(context) {
 
+    /*************************************
+     HELPER METHODS
+    *************************************/
+
     // shortcut for querySelectorAll
     var $ = function(sel_or_el) {
         if ( sel_or_el.tagName ) {
@@ -17,6 +21,19 @@
     var mapNL = function(nl, cb) {
         return map.call(nl, cb);
     };
+
+    var log = function(level, name, args) {
+        if ( D.config.log_level >= level ) {
+            console[name].apply(console, args);
+        }
+    };
+
+
+
+
+    /*************************************
+     DECKARD & CONFIG
+    *************************************/
 
     var Deckard, D;
 
@@ -46,61 +63,23 @@
         }
     };
 
-    var log = function(level, name, args) {
-        if ( D.config.log_level >= level ) {
-            console[name].apply(console, args);
+
+
+    /*************************************
+     NAVIGATION AND ANIMATION
+    *************************************/
+
+    D.navigatePrevious = function(deck) {
+        if ( deck.current > 0 ) {
+            D.showDeckIndex(deck, deck.current-1);
         }
     };
-    D.debug = function() {
-        log(D.constants.LOG_DEBUG, 'debug', arguments);
-    };
-    D.info = function() {
-        log(D.constants.LOG_INFO, 'info', arguments);
-    };
-    D.warn = function() {
-        log(D.constants.LOG_WARN, 'warn', arguments);
-    };
-    D.error = function() {
-        log(D.constants.LOG_ERROR, 'error', arguments);
-    };
-    D.setLogLevel = function(level) {
-        D.config.log_level = level;
-    }
-
-    D.init = function(context) {
-        D.debug('D.init', context);
-        // capture "window.Deckard = {/* config */}" values
-        if ( context.Deckard ) {
-            // @TODO implement this!
-            D.warn('Deckard config overrides are not currently implemented');
-            D.config_overrides = context.Deckard;
+    D.navigateNext = function(deck) {
+        var len = deck.slides.length;
+        if ( deck.current < len - 1 ) {
+            D.showDeckIndex(deck, deck.current+1);
         }
-        if ( context.module && context.module.exports ) {
-            context.module.exports = D;
-        } else if ( context.define ) {
-            context.define([], function() { return D; } );
-        } else {
-            context.Deckard = D;
-        }
-        D.initDecks();
     };
-
-    D.getNavigationPrevious = function(deck) {
-        return deck.el.querySelector(D.config.selectors.previous);
-    };
-
-    D.getNavigationNext = function(deck) {
-        return deck.el.querySelector(D.config.selectors.next);
-    };
-
-    D.getNavigationItems = function(deck) {
-        return deck.el.querySelector(D.config.selectors.navigation_items);
-    };
-
-    D.getSlides = function(deck) {
-        return deck.el.querySelectorAll(D.config.selectors.item);
-    };
-
     D.showDeckIndex = function(deck, index) {
         var direction = (deck.current===null) ? 1 : index - deck.current;
         D.info('D.showDeckIndex', deck, index);
@@ -149,6 +128,83 @@
         })
     };
 
+
+
+
+
+
+    /*************************************
+     LOGGING
+    *************************************/
+
+    D.debug = function() {
+        log(D.constants.LOG_DEBUG, 'debug', arguments);
+    };
+    D.info = function() {
+        log(D.constants.LOG_INFO, 'info', arguments);
+    };
+    D.warn = function() {
+        log(D.constants.LOG_WARN, 'warn', arguments);
+    };
+    D.error = function() {
+        log(D.constants.LOG_ERROR, 'error', arguments);
+    };
+    D.setLogLevel = function(level) {
+        D.config.log_level = level;
+    }
+
+    D.init = function(context) {
+        D.debug('D.init', context);
+        // capture "window.Deckard = {/* config */}" values
+        if ( context.Deckard ) {
+            // @TODO implement this!
+            D.warn('Deckard config overrides are not currently implemented');
+            D.config_overrides = context.Deckard;
+        }
+        if ( context.module && context.module.exports ) {
+            context.module.exports = D;
+        } else if ( context.define ) {
+            context.define([], function() { return D; } );
+        } else {
+            context.Deckard = D;
+        }
+        D.initDecks();
+    };
+
+
+    /*************************************
+     DOM ELEMENT GETTERS
+    *************************************/
+
+    D.getClickContainer = function(deck) {
+        return deck.el;
+    };
+    D.getRootContainer = function(deck) {
+        return context;
+    };
+    D.getNavigationPrevious = function(deck) {
+        return deck.el.querySelector(D.config.selectors.previous);
+    };
+
+    D.getNavigationNext = function(deck) {
+        return deck.el.querySelector(D.config.selectors.next);
+    };
+
+    D.getNavigationItems = function(deck) {
+        return deck.el.querySelector(D.config.selectors.navigation_items);
+    };
+
+    D.getSlides = function(deck) {
+        return deck.el.querySelectorAll(D.config.selectors.item);
+    };
+
+
+
+
+    /*************************************
+     INIT
+    *************************************/
+    
     D.bindNavigationEvents = function(deck) {
         if ( deck.controls.next ) {
             deck.controls.next.addEventListener('click', function(ev) {
@@ -177,23 +233,6 @@
             }
         }, false);
     };
-    D.getClickContainer = function(deck) {
-        return deck.el;
-    };
-    D.getRootContainer = function(deck) {
-        return context;
-    };
-    D.navigatePrevious = function(deck) {
-        if ( deck.current > 0 ) {
-            D.showDeckIndex(deck, deck.current-1);
-        }
-    };
-    D.navigateNext = function(deck) {
-        var len = deck.slides.length;
-        if ( deck.current < len - 1 ) {
-            D.showDeckIndex(deck, deck.current+1);
-        }
-    };
 
     D.initDeck = function(deck) {
         D.bindNavigationEvents(deck);
@@ -217,6 +256,8 @@
             D.initDeck(deck);
         });
     };
+
+
 
 
     D.init(context);

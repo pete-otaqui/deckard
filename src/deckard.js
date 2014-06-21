@@ -81,8 +81,17 @@
         }
     };
     D.showDeckIndex = function(deck, index) {
-        var direction = (deck.current===null) ? 1 : index - deck.current;
         D.info('D.showDeckIndex', deck, index);
+        if ( index === deck.current ) {
+            D.debug('not showing index because we are already showing it');
+            return;
+        }
+        if ( deck.navigating ) {
+            D.debug('not showing index because we are navigating');
+            return;
+        }
+        deck.navigating = true;
+        var direction = (deck.current===null) ? 1 : index - deck.current;
         D.animateSlideIn(deck, index, direction);
         if ( deck.current !== null ) {
             D.animateSlideOut(deck, deck.current, direction);
@@ -106,6 +115,7 @@
         });
         player.addEventListener('finish', function(ev) {
             D.debug('finished animateSlideIn', ev);
+            deck.navigating = false;
         })
     };
 
@@ -204,7 +214,7 @@
     /*************************************
      INIT
     *************************************/
-    
+
     D.bindNavigationEvents = function(deck) {
         if ( deck.controls.next ) {
             deck.controls.next.addEventListener('click', function(ev) {
@@ -243,7 +253,8 @@
         forEachNL($('.deckard-holder'), function(el) {
             var deck = {
                 el:el,
-                current: null
+                current: null,
+                navigating: false
             };
             deck.controls = {
                 previous: D.getNavigationPrevious(deck),

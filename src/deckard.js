@@ -123,7 +123,7 @@
         return anim;
     };
     D.getAnimationSet = function(deck, index) {
-        return D.animation_sets.slide;
+        return D.animation_sets.fall;
     };
     D.getAnimationFromSet = function(set, in_or_out, dir) {
         var a_in, a_out;
@@ -226,16 +226,28 @@
             {transform: 'translate(0, 0)'}
         ]
     );
-    D.makeAnimation('grow',
+    D.makeAnimation('scaleUpToOne',
         [
             {transform:'scale(0.5, 0.5)'},
-            {transform:'scale(0, 0)'}
+            {transform:'scale(1, 1)'}
         ]
     );
-    D.makeAnimation('shrink',
+    D.makeAnimation('scaleDownFromOne',
         [
-            {transform:'scale(0.5, 0.5)'},
-            {transform:'scale(0, 0)'}
+            {transform:'scale(1, 1)'},
+            {transform:'scale(0.5, 0.5)'}
+        ]
+    );
+    D.makeAnimation('scaleUpFromOne',
+        [
+            {transform:'scale(1, 1)'},
+            {transform:'scale(1.5, 1.5)'}
+        ]
+    );
+    D.makeAnimation('scaleDownToOne',
+        [
+            {transform:'scale(1.5, 1.5)'},
+            {transform:'scale(1, 1)'}
         ]
     );
 
@@ -243,6 +255,11 @@
     D.makeAnimationGroup('fadeOutToRight', ['fadeOut', 'slideToRight']);
     D.makeAnimationGroup('fadeInFromLeft', ['fadeIn', 'slideFromLeft']);
     D.makeAnimationGroup('fadeInFromRight', ['fadeIn', 'slideFromRight']);
+
+    D.makeAnimationGroup('fadeInAndDownToOne', ['fadeIn', 'scaleDownToOne']);
+    D.makeAnimationGroup('fadeOutAndDownFromOne', ['fadeOut', 'scaleDownFromOne']);
+    D.makeAnimationGroup('fadeInAndUpToOne', ['fadeIn', 'scaleUpToOne']);
+    D.makeAnimationGroup('fadeOutAndUpFromOne', ['fadeOut', 'scaleUpFromOne']);
 
 
     D.animation_sets = {};
@@ -258,6 +275,13 @@
     D.makeInOutSet('fade', {
         anim_in: D.animations.fadeIn,
         anim_out: D.animations.fadeOut
+    });
+
+    D.makeInOutSet('fall', {
+        anim_in_forward: D.animations.fadeInAndDownToOne,
+        anim_out_forward: D.animations.fadeOutAndDownFromOne,
+        anim_in_backward: D.animations.fadeInAndUpToOne,
+        anim_out_backward: D.animations.fadeOutAndUpFromOne
     });
 
 

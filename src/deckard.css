@@ -1,6 +1,12 @@
 .deckard-set,
-.deckard-set * {
+.deckard-set:before,
+.deckard-set:after,
+.deckard-set *,
+.deckard-set *:before,
+.deckard-set *:after {
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 .deckard-set {
     width: 100%;

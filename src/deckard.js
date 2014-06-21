@@ -72,7 +72,7 @@
         // capture "window.Deckard = {/* config */}" values
         if ( context.Deckard ) {
             // @TODO implement this!
-            console.warn('Deckard config overrides are not currently implemented');
+            D.warn('Deckard config overrides are not currently implemented');
             D.config_overrides = context.Deckard;
         }
         if ( context.module && context.module.exports ) {
@@ -102,37 +102,46 @@
     };
 
     D.showDeckIndex = function(deck, index) {
+        var direction = (deck.current===null) ? 1 : index - deck.current;
         D.info('D.showDeckIndex', deck, index);
-        D.animateSlideIn(deck, index);
+        D.animateSlideIn(deck, index, direction);
         if ( deck.current !== null ) {
-            D.animateSlideOut(deck, deck.current);
+            D.animateSlideOut(deck, deck.current, direction);
         }
         deck.current = index;
     };
 
-    D.animateSlideIn = function(deck, index) {
+    D.animateSlideIn = function(deck, index, direction) {
         var slide = deck.slides.item(index);
         slide.classList.add('active');
         slide.style.zIndex = D.config.slide_zIndex_active;
+        var translation_start = 'translate(20px, 0)';
+        if ( direction < 0 ) {
+            translation_start = 'translate(-20px, 0)';
+        }
         var player = slide.animate([
-            {opacity: 0},
-            {opacity: 1}
+            {opacity: 0, transform: translation_start},
+            {opacity: 1, transform: 'translate(0, 0)'}
         ], {
-            duration: 1000
+            duration: 300
         });
         player.addEventListener('finish', function(ev) {
             D.debug('finished animateSlideIn', ev);
         })
     };
 
-    D.animateSlideOut = function(deck, index) {
+    D.animateSlideOut = function(deck, index, direction) {
         var slide = deck.slides.item(index);
         slide.style.zIndex = D.config.slide_zIndex_inactive;
+        var translation_end = 'translate(-20px, 0)';
+        if ( direction < 0 ) {
+            translation_end = 'translate(20px, 0)';
+        }
         var player = slide.animate([
-            {opacity: 1},
-            {opacity: 0}
+            {opacity: 1, transform: 'translate(0, 0)'},
+            {opacity: 0, transform: translation_end}
         ], {
-            duration: 1000
+            duration: 300
         });
         player.addEventListener('finish', function(ev) {
             D.debug('finished animateSlideOut', ev);

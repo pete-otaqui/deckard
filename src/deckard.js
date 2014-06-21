@@ -47,6 +47,7 @@
         }
     };
     D.config = {
+        duration: 300,
         log_level: D.constants.LOG_INFO,
         key_list_next : [13, 32, 39, 40],
         key_list_previous: [37, 38],
@@ -66,7 +67,7 @@
 
 
     /*************************************
-     NAVIGATION AND ANIMATION
+     NAVIGATION
     *************************************/
 
     D.navigatePrevious = function(deck) {
@@ -98,6 +99,16 @@
         }
         deck.current = index;
     };
+
+
+
+
+
+
+
+    /*************************************
+     NAVIGATION AND ANIMATION
+    *************************************/
 
     D.animateIn = function(deck, index, direction) {
         var slide = deck.slides.item(index);
@@ -136,6 +147,84 @@
             D.debug('finished animateSlideOut', ev);
             deck.slides.item(index).classList.remove('active');
         })
+    };
+
+
+    D.makeAnimation = function(name, props, options) {
+        if (!options.duration) {
+            options.duration = D.config.duration;
+        }
+        D.animations[name] = function(el) {
+            return new Animation(el, props, options);
+        };
+        return D.animations[name];
+    }
+
+    D.transitions = {};
+    D.addTransition = function(name, properties_start, properties_end, included_transitions) {
+        if ( included_transitions ) {
+            console.log(included_transitions);
+            included_transitions
+                .map(function(tn) { return D.transitions[tn]; })
+                .forEach(function(t) {
+                    var k;
+                    for ( k in t[0] ) properties_start[k] = t[0][k];
+                    for ( k in t[1] ) properties_end[k] = t[1][k];
+                });
+        }
+        D.transitions[name] = [properties_start, properties_end];
+    };
+    D.addTransition('fade_in',
+        {opacity: 0},
+        {opacity: 1}
+    );
+    D.addTransition('fade_out',
+        {opacity: 1},
+        {opacity: 0}
+    );
+    D.addTransition('slide_to_left',
+        {transform: 'translate(0, 0)'},
+        {transform: 'translate(-20px, 0)'}
+    );
+    D.addTransition('slide_from_left'   ,
+        {transform: 'translate(-20px, 0)'},
+        {transform: 'translate(0, 0)'}
+    );
+    D.addTransition('slide_to_right',
+        {transform: 'translate(0, 0)'},
+        {transform: 'translate(20px, 0)'}
+    );
+    D.addTransition('slide_from_right',
+        {transform: 'translate(20px, 0)'},
+        {transform: 'translate(0, 0)'}
+    );
+    D.addTransition('grow',
+        {transform:'scale(0.5, 0.5)'},
+        {transform:'scale(0, 0)'}
+    );
+    D.addTransition('shrink',
+        {transform:'scale(0.5, 0.5)'},
+        {transform:'scale(0, 0)'}
+    );
+
+    D.addTransition('fade_out_to_left', {}, {}, ['fade_out', 'slide_to_left']);
+    D.addTransition('fade_out_to_right', {}, {}, ['fade_out', 'slide_to_right']);
+    D.addTransition('fade_in_from_left', {}, {}, ['fade_in', 'slide_from_left']);
+    D.addTransition('fade_in_from_right', {}, {}, ['fade_in', 'slide_from_right']);
+
+    D.core_transitions = {
+        slide_in_from_left: [],
+        slide_in_from_right: [],
+        slide_in_from_bottom: [],
+        slide_in_from_top: [],
+        slide_out_to_left: [],
+        slide_out_to_right: [],
+        slide_out_to_bottom: [],
+        slide_out_to_top: [],
+        fade_in: [],
+        fade_out: [],
+        grow: [],
+        shrink: []
     };
 
 

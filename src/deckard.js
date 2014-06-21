@@ -92,14 +92,14 @@
         }
         deck.navigating = true;
         var direction = (deck.current===null) ? 1 : index - deck.current;
-        D.animateSlideIn(deck, index, direction);
+        D.animateIn(deck, index, direction);
         if ( deck.current !== null ) {
-            D.animateSlideOut(deck, deck.current, direction);
+            D.animateOut(deck, deck.current, direction);
         }
         deck.current = index;
     };
 
-    D.animateSlideIn = function(deck, index, direction) {
+    D.animateIn = function(deck, index, direction) {
         var slide = deck.slides.item(index);
         slide.classList.add('active');
         slide.style.zIndex = D.config.slide_zIndex_active;
@@ -119,7 +119,7 @@
         })
     };
 
-    D.animateSlideOut = function(deck, index, direction) {
+    D.animateOut = function(deck, index, direction) {
         var slide = deck.slides.item(index);
         slide.style.zIndex = D.config.slide_zIndex_inactive;
         var translation_end = 'translate(-20px, 0)';

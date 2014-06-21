@@ -1,5 +1,21 @@
+.deckard-set,
+.deckard-set * {
+    box-sizing: border-box;
+}
+.deckard-set {
+    width: 100%;
+    min-height: 300px;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
 .deckard-item {
+    position: absolute;
+    height: 100%;
+    width: 100%;
     display: none;
+    margin: 0;
+    padding: 0;
 }
 .deckard-item.active {
     display: block;

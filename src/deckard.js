@@ -25,6 +25,8 @@
         config: {
             key_list_next : [13, 32, 39, 40],
             key_list_previous: [37, 38],
+            slide_zIndex_inactive: 1,
+            slide_zIndex_active: 2,
             selectors: {
                 holder: '.deckard-holder',
                 controls: '.deckard-controls',
@@ -71,14 +73,17 @@
     };
 
     D.showDeckIndex = function(deck, index) {
-        deck.slides.item(deck.current).classList.remove('active');
-        deck.slides.item(index).classList.add('active');
         D.animateSlideIn(deck, index);
+        if ( deck.current !== null ) {
+            D.animateSlideOut(deck, deck.current);
+        }
         deck.current = index;
     };
 
     D.animateSlideIn = function(deck, index) {
         var slide = deck.slides.item(index);
+        slide.classList.add('active');
+        slide.style.zIndex = D.config.slide_zIndex_active;
         var player = slide.animate([
             {opacity: 0},
             {opacity: 1}
@@ -90,17 +95,33 @@
         })
     };
 
+    D.animateSlideOut = function(deck, index) {
+        var slide = deck.slides.item(index);
+        slide.style.zIndex = D.config.slide_zIndex_inactive;
+        var player = slide.animate([
+            {opacity: 1},
+            {opacity: 0}
+        ], {
+            duration: 1000
+        });
+        player.addEventListener('finish', function(ev) {
+            deck.slides.item(index).classList.remove('active');
+        })
+    };
+
     D.bindNavigationEvents = function(deck) {
         if ( deck.controls.next ) {
             deck.controls.next.addEventListener('click', function(ev) {
                 D.navigateNext(deck);
                 ev.preventDefault();
+                ev.stopPropagation();
             }, false);
         }
         if ( deck.controls.previous ) {
             deck.controls.previous.addEventListener('click', function(ev) {
                 D.navigatePrevious(deck);
                 ev.preventDefault();
+                ev.stopPropagation();
             }, false);
         }
         D.getClickContainer(deck).addEventListener('click', function(ev) {
@@ -143,7 +164,7 @@
         forEachNL($('.deckard-holder'), function(el) {
             var deck = {
                 el:el,
-                current: 0
+                current: null
             };
             deck.controls = {
                 previous: D.getNavigationPrevious(deck),

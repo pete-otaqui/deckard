@@ -73,7 +73,21 @@
     D.showDeckIndex = function(deck, index) {
         deck.slides.item(deck.current).classList.remove('active');
         deck.slides.item(index).classList.add('active');
+        D.animateSlideIn(deck, index);
         deck.current = index;
+    };
+
+    D.animateSlideIn = function(deck, index) {
+        var slide = deck.slides.item(index);
+        var player = slide.animate([
+            {opacity: 0},
+            {opacity: 1}
+        ], {
+            duration: 1000
+        });
+        player.addEventListener('finish', function(ev) {
+            console.log('finished!', ev);
+        })
     };
 
     D.bindNavigationEvents = function(deck) {

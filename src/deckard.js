@@ -22,24 +22,53 @@
 
     D = Deckard = {
         decks: [],
-        config: {
-            key_list_next : [13, 32, 39, 40],
-            key_list_previous: [37, 38],
-            slide_zIndex_inactive: 1,
-            slide_zIndex_active: 2,
-            selectors: {
-                holder: '.deckard-holder',
-                controls: '.deckard-controls',
-                previous: '*[data-deckard-navigation="previous"]',
-                next: '*[data-deckard-navigation="next"]',
-                navigation_items: '*[data-deckard-navigation="items"]',
-                set: '.deckard-set',
-                item: '.deckard-item'
-            }
+        constants: {
+            LOG_DEBUG: 4,
+            LOG_INFO:  3,
+            LOG_WARN:  2,
+            LOG_ERROR: 1
+        }
+    };
+    D.config = {
+        log_level: D.constants.LOG_INFO,
+        key_list_next : [13, 32, 39, 40],
+        key_list_previous: [37, 38],
+        slide_zIndex_inactive: 1,
+        slide_zIndex_active: 2,
+        selectors: {
+            holder: '.deckard-holder',
+            controls: '.deckard-controls',
+            previous: '*[data-deckard-navigation="previous"]',
+            next: '*[data-deckard-navigation="next"]',
+            navigation_items: '*[data-deckard-navigation="items"]',
+            set: '.deckard-set',
+            item: '.deckard-item'
         }
     };
 
+    var log = function(level, name, args) {
+        if ( D.config.log_level >= level ) {
+            console[name].apply(console, args);
+        }
+    };
+    D.debug = function() {
+        log(D.constants.LOG_DEBUG, 'debug', arguments);
+    };
+    D.info = function() {
+        log(D.constants.LOG_INFO, 'info', arguments);
+    };
+    D.warn = function() {
+        log(D.constants.LOG_WARN, 'warn', arguments);
+    };
+    D.error = function() {
+        log(D.constants.LOG_ERROR, 'error', arguments);
+    };
+    D.setLogLevel = function(level) {
+        D.config.log_level = level;
+    }
+
     D.init = function(context) {
+        D.debug('D.init', context);
         // capture "window.Deckard = {/* config */}" values
         if ( context.Deckard ) {
             // @TODO implement this!
@@ -73,6 +102,7 @@
     };
 
     D.showDeckIndex = function(deck, index) {
+        D.info('D.showDeckIndex', deck, index);
         D.animateSlideIn(deck, index);
         if ( deck.current !== null ) {
             D.animateSlideOut(deck, deck.current);
@@ -91,7 +121,7 @@
             duration: 1000
         });
         player.addEventListener('finish', function(ev) {
-            console.log('finished!', ev);
+            D.debug('finished animateSlideIn', ev);
         })
     };
 
@@ -105,6 +135,7 @@
             duration: 1000
         });
         player.addEventListener('finish', function(ev) {
+            D.debug('finished animateSlideOut', ev);
             deck.slides.item(index).classList.remove('active');
         })
     };
@@ -172,6 +203,7 @@
                 items : D.getNavigationItems(deck)
             };
             deck.slides = D.getSlides(deck);
+            D.debug('adding deck', deck);
             D.decks.push(deck);
             D.initDeck(deck);
         });

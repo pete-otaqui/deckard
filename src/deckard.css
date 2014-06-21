@@ -1,0 +1,6 @@
+.deckard-item {
+    display: none;
+}
+.deckard-item.active {
+    display: block;
+}

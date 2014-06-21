@@ -93,6 +93,8 @@
         }
         deck.navigating = true;
         var direction = (deck.current===null) ? 1 : index - deck.current;
+        var anim_in = D.getAnimationIn(deck, index, direction);
+        var anim_out = D.getAnimationOut(deck, index, direction);
         D.animateIn(deck, index, direction);
         if ( deck.current !== null ) {
             D.animateOut(deck, deck.current, direction);
@@ -107,42 +109,53 @@
 
 
     /*************************************
-     NAVIGATION AND ANIMATION
+     ANIMATION
     *************************************/
+
+    D.getAnimationIn = function(deck, index, direction) {
+        var set = D.getAnimationSet(deck, index);
+        var anim = D.getAnimationFromSet(set, 'in', direction);
+        return anim;
+    };
+    D.getAnimationOut = function(deck, index, direction) {
+        var set = D.getAnimationSet(deck, index);
+        var anim = D.getAnimationFromSet(set, 'out', direction);
+        return anim;
+    };
+    D.getAnimationSet = function(deck, index) {
+        return D.animation_sets.slide;
+    };
+    D.getAnimationFromSet = function(set, in_or_out, dir) {
+        var a_in, a_out;
+        if ( set.anim_in_forward ) {
+            a_in = (dir >= 0) ? set.anim_in_forward : set.anim_in_backward;
+            a_out = (dir >= 0 ) ? set.anim_out_forward : set.anim_out_backward;
+        } else {
+            a_in = set.anim_in;
+            a_out = set.anim_out;
+        }
+        return ( in_or_out === 'in' ) ? a_in : a_out;
+    };
 
     D.animateIn = function(deck, index, direction) {
         var slide = deck.slides.item(index);
         slide.classList.add('active');
         slide.style.zIndex = D.config.slide_zIndex_active;
-        var translation_start = 'translate(20px, 0)';
-        if ( direction < 0 ) {
-            translation_start = 'translate(-20px, 0)';
-        }
-        var player = slide.animate([
-            {opacity: 0, transform: translation_start},
-            {opacity: 1, transform: 'translate(0, 0)'}
-        ], {
-            duration: 300
-        });
+        var anim_fn = D.getAnimationIn(deck, index, direction);
+        var anim = anim_fn(slide);
+        var player = document.timeline.play(anim);
         player.addEventListener('finish', function(ev) {
             D.debug('finished animateSlideIn', ev);
             deck.navigating = false;
-        })
+        });
     };
 
     D.animateOut = function(deck, index, direction) {
         var slide = deck.slides.item(index);
         slide.style.zIndex = D.config.slide_zIndex_inactive;
-        var translation_end = 'translate(-20px, 0)';
-        if ( direction < 0 ) {
-            translation_end = 'translate(20px, 0)';
-        }
-        var player = slide.animate([
-            {opacity: 1, transform: 'translate(0, 0)'},
-            {opacity: 0, transform: translation_end}
-        ], {
-            duration: 300
-        });
+        var anim_fn = D.getAnimationOut(deck, index, direction);
+        var anim = anim_fn(slide);
+        var player = document.timeline.play(anim);
         player.addEventListener('finish', function(ev) {
             D.debug('finished animateSlideOut', ev);
             deck.slides.item(index).classList.remove('active');
@@ -150,85 +163,102 @@
     };
 
 
+    D.animations = {};
     D.makeAnimation = function(name, props, options) {
-        if (!options.duration) {
-            options.duration = D.config.duration;
-        }
+        if ( !options ) options = {};
+        if ( !options.duration ) options.duration = D.config.duration;
         D.animations[name] = function(el) {
             return new Animation(el, props, options);
         };
         return D.animations[name];
     }
-
-    D.transitions = {};
-    D.addTransition = function(name, properties_start, properties_end, included_transitions) {
-        if ( included_transitions ) {
-            console.log(included_transitions);
-            included_transitions
-                .map(function(tn) { return D.transitions[tn]; })
-                .forEach(function(t) {
-                    var k;
-                    for ( k in t[0] ) properties_start[k] = t[0][k];
-                    for ( k in t[1] ) properties_end[k] = t[1][k];
-                });
+    D.makeAnimationGroup = function(name, children) {
+        children = children.map(function(c) { return D.animations[c]; });
+        D.animations[name] = function(el) {
+            return new AnimationGroup(children.map(function(c) {
+                return c(el);
+            }));
         }
-        D.transitions[name] = [properties_start, properties_end];
-    };
-    D.addTransition('fade_in',
-        {opacity: 0},
-        {opacity: 1}
+        return D.animations[name];
+    }
+    D.makeAnimationSequence = function(name, children) {
+        D.animations[name] = function(el) {
+            return new AnimationSequence(children.map(function(c) {
+                return c(el);
+            }));
+        }
+        return D.animations[name];
+    }
+
+    D.makeAnimation('fadeIn',
+        [
+            {opacity: 0},
+            {opacity: 1}
+        ]
     );
-    D.addTransition('fade_out',
-        {opacity: 1},
-        {opacity: 0}
+    D.makeAnimation('fadeOut',
+        [
+            {opacity: 1},
+            {opacity: 0}
+        ]
     );
-    D.addTransition('slide_to_left',
-        {transform: 'translate(0, 0)'},
-        {transform: 'translate(-20px, 0)'}
+    D.makeAnimation('slideToLeft',
+        [
+            {transform: 'translate(0, 0)'},
+            {transform: 'translate(-20px, 0)'}
+        ]
     );
-    D.addTransition('slide_from_left'   ,
-        {transform: 'translate(-20px, 0)'},
-        {transform: 'translate(0, 0)'}
+    D.makeAnimation('slideFromLeft',
+        [
+            {transform: 'translate(-20px, 0)'},
+            {transform: 'translate(0, 0)'}
+        ]
     );
-    D.addTransition('slide_to_right',
-        {transform: 'translate(0, 0)'},
-        {transform: 'translate(20px, 0)'}
+    D.makeAnimation('slideToRight',
+        [
+            {transform: 'translate(0, 0)'},
+            {transform: 'translate(20px, 0)'}
+        ]
     );
-    D.addTransition('slide_from_right',
-        {transform: 'translate(20px, 0)'},
-        {transform: 'translate(0, 0)'}
+    D.makeAnimation('slideFromRight',
+        [
+            {transform: 'translate(20px, 0)'},
+            {transform: 'translate(0, 0)'}
+        ]
     );
-    D.addTransition('grow',
-        {transform:'scale(0.5, 0.5)'},
-        {transform:'scale(0, 0)'}
+    D.makeAnimation('grow',
+        [
+            {transform:'scale(0.5, 0.5)'},
+            {transform:'scale(0, 0)'}
+        ]
     );
-    D.addTransition('shrink',
-        {transform:'scale(0.5, 0.5)'},
-        {transform:'scale(0, 0)'}
+    D.makeAnimation('shrink',
+        [
+            {transform:'scale(0.5, 0.5)'},
+            {transform:'scale(0, 0)'}
+        ]
     );
 
-    D.addTransition('fade_out_to_left', {}, {}, ['fade_out', 'slide_to_left']);
-    D.addTransition('fade_out_to_right', {}, {}, ['fade_out', 'slide_to_right']);
-    D.addTransition('fade_in_from_left', {}, {}, ['fade_in', 'slide_from_left']);
-    D.addTransition('fade_in_from_right', {}, {}, ['fade_in', 'slide_from_right']);
-
-    D.core_transitions = {
-        slide_in_from_left: [],
-        slide_in_from_right: [],
-        slide_in_from_bottom: [],
-        slide_in_from_top: [],
-        slide_out_to_left: [],
-        slide_out_to_right: [],
-        slide_out_to_bottom: [],
-        slide_out_to_top: [],
-        fade_in: [],
-        fade_out: [],
-        grow: [],
-        shrink: []
-    };
+    D.makeAnimationGroup('fadeOutToLeft', ['fadeOut', 'slideToLeft']);
+    D.makeAnimationGroup('fadeOutToRight', ['fadeOut', 'slideToRight']);
+    D.makeAnimationGroup('fadeInFromLeft', ['fadeIn', 'slideFromLeft']);
+    D.makeAnimationGroup('fadeInFromRight', ['fadeIn', 'slideFromRight']);
 
 
-
+    D.animation_sets = {};
+    D.makeInOutSet = function(name, fns) {
+        D.animation_sets[name] = fns;
+    }
+    D.makeInOutSet('slide', {
+        anim_in_forward: D.animations.fadeInFromRight,
+        anim_out_forward: D.animations.fadeOutToLeft,
+        anim_in_backward: D.animations.fadeInFromLeft,
+        anim_out_backward: D.animations.fadeOutToRight
+    });
+    D.makeInOutSet('fade', {
+        anim_in: D.animations.fadeIn,
+        anim_out: D.animations.fadeOut
+    });
 
 
 

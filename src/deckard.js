@@ -322,7 +322,7 @@
         D.config.log_level = level;
     }
 
-    D.init = function(context) {
+    D.initDeckard = function(context) {
         D.debug('D.init', context);
         // capture "window.Deckard = {/* config */}" values
         if ( context.Deckard ) {
@@ -337,7 +337,6 @@
         } else {
             context.Deckard = D;
         }
-        D.initDecks();
     };
 
 
@@ -408,7 +407,7 @@
         D.showDeckIndex(deck, 0);
     }
 
-    D.initDecks = function() {
+    D.init = function() {
         forEachNL($('.deckard-holder'), function(el) {
             var deck = {
                 el:el,
@@ -429,9 +428,7 @@
     };
 
 
-
-
-    D.init(context);
+    D.initDeckard(context);
 
 
 })(this);

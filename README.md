@@ -151,5 +151,7 @@ Running the code above will enable a new transition in Deckard which you can use
 in your HTML like so:
 
 ```html
-<div class="deckard-slide" data-deckard-transition="slowFade">/* ... */</div>
+<div class="deckard-slide" data-deckard-transition="slowFade">
+    <!-- content -->
+</div>
 ```

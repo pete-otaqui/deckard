@@ -128,7 +128,7 @@ function makeAnimation(props_array, options) {
 Deckard actually uses an extra first parameter as the "name".
 
 ```js
-// Now we can compose animation functions like this:
+// Create animation functions like this:
 
 Deckard.makeAnimation(
     'slowFadeIn',
@@ -140,6 +140,8 @@ Deckard.makeAnimation(
     [{opacity:1}, {opacity:0}],
     {duration:2000}
 );
+
+// And compose them into a transition like this:
 
 Deckard.makeTransition('slowFade', {
     animIn: 'slowFadeIn',

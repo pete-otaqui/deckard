@@ -34,7 +34,7 @@ Deckard needs at least the following HTML:
 You can customize the transition between all slides in a declarative fashion:
 
 ```html
-<div class="deckard-holder" data-deckard-animation="fall">
+<div class="deckard-holder" data-deckard-transition="fall">
     <ul class="deckard-slides">
         <li class="deckard-slide">
             <h2>I am a slide</h2>
@@ -54,7 +54,7 @@ Or you can customize the transition for a single slide:
         <li class="deckard-slide">
             <h2>I am a slide</h2>
         </li>
-        <li class="deckard-slide" data-deckard-animation="fall">
+        <li class="deckard-slide" data-deckard-transition="fall">
             <h2>I am a slide</h2>
         </li>
     </ul>

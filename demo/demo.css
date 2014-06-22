@@ -6,7 +6,7 @@ body {
 }
 html, body {
     width: 100%;
-    height:100%;
+    height:400px;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -39,12 +39,8 @@ html, body {
 }
 .deckard-item {
     background-color: #eee;
-    background-image: linear-gradient(to bottom, #eee, #ccc);
     border: 1px solid #ccc;
     text-align: center;
     height: 100%;
     padding: 12px 24px 12px;
-}
-body {
-    overflow: hidden;
 }

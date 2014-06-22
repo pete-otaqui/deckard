@@ -48,7 +48,7 @@
     };
     D.config = {
         animation: 'fall',
-        duration: 300,
+        duration: 400,
         log_level: D.constants.LOG_INFO,
         key_list_next : [13, 32, 39, 40],
         key_list_previous: [37, 38],
@@ -182,6 +182,7 @@
     D.makeAnimation = function(name, props, options) {
         if ( !options ) options = {};
         if ( !options.duration ) options.duration = D.config.duration;
+        if ( !options.easing ) options.easing = 'ease-in-out';
         D.animations[name] = function(el) {
             return new Animation(el, props, options);
         };

@@ -35,7 +35,7 @@ html, body {
     height: 100%;
 }
 .deckard-set {
-    padding-bottom: 12px;
+    padding-bottom: 12px;   
 }
 .deckard-item {
     background-color: #eee;
@@ -43,6 +43,7 @@ html, body {
     border: 1px solid #ccc;
     text-align: center;
     height: 100%;
+    padding: 12px 24px 12px;
 }
 body {
     overflow: hidden;

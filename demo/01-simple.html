@@ -21,11 +21,10 @@
             <ul class="deckard-set">
                 <li class="deckard-item">
                     <h2>Slide 1</h2>
-                    <p>This is a deckard slide.</p>
-                    <p>It is inside a "set" of deckard slides.</p>
+                    <p>This is a deckard slide,  inside a "set" of deckard slides.</p>
                     <p>
                         The "set" defines a standard transition between slides,
-                        which is why I slid in from the left.
+                        which is why I slid in from the right, and I will slide out to the left.  These directions reverse if you come back to this slide.
                     </p>
                     <p>You can click anywhere to go forward, or use the navigation links, or the arrow keys, or the "return" or "spacebar" keys.  They should all be fairly intuitive.</p>
                 </li>
@@ -41,8 +40,9 @@
                     <h2>Slide 3</h2>
                     <p>This is another deckard slide.</p>
                     <p>
-                        I have a different animation style to the default.
+                        I have a different animation style to the default.  The change in animation was specified declaritively in my a HTML by adding this attribute:<br/> <code>data-deckard-animation="fall"</code>
                     </p>
+                    <p>Note the change in direction as you navigate into and out of this slide forwards and backwards.</p>
                 </li>
                 <li class="deckard-item">
                     <h2>Slide 4</h2>

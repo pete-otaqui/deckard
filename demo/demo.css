@@ -1,12 +1,39 @@
-.container {
-    max-width: 800px;
-    margin: 0 auto;
+
+body {
+    font-family: "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+html, body {
+    height:100%;
+    margin: 0;
+    padding: 0;
+}
+
+.demo-title {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 1em 1.5em;
+    margin: 0;
+    z-index: 3;
+}
+.deckard-controls {
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 3;
+    padding: 1em 1.5em;
+}
+.deckard-holder,
+.deckard-set {
+    height: 100%;
 }
 .deckard-item {
     background-color: #eee;
     border: 1px solid #ccc;
     text-align: center;
-    height: 300px;
+    height: 100%;
 }
 body {
     overflow: hidden;

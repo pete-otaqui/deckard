@@ -159,7 +159,6 @@
         var anim_fn = D.getAnimationIn(deck, index, direction);
         var anim = anim_fn(slide);
         var player = document.timeline.play(anim);
-        window.player = player;
         player.addEventListener('finish', function(ev) {
             // D.info('finished animateSlideIn', ev);
             deck.navigating = false;

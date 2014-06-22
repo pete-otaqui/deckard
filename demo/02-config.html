@@ -18,8 +18,8 @@
                     data-deckard-navigation="items">
                 </ul>
             </nav>
-            <ul class="deckard-set">
-                <li class="deckard-item">
+            <ul class="deckard-slides">
+                <li class="deckard-slide">
                     <h2>Slide 1</h2>
                     <p>
                         This is a deckard slide,  inside a "set" of deckard
@@ -33,13 +33,13 @@
                     <p class="align-left">
                         <code>
                             &lt;script&gt;<br/>
-                            &nbsp;&nbsp;Deckard = { animation:'fade' };<br/>
+                            &nbsp;&nbsp;Deckard = { transition:'fade' };<br/>
                             &lt;/script&gt;<br/>
                             &lt;script src="deckard.js"&gt;&lt;/script&gt;
                         </code>
                     </p>
                 </li>
-                <li class="deckard-item">
+                <li class="deckard-slide">
                     <h2>Slide 2</h2>
                     <p>This is another deckard slide.</p>
                     <p>
@@ -47,28 +47,28 @@
                         as the first.
                     </p>
                 </li>
-                <li class="deckard-item" data-deckard-animation="fall">
+                <li class="deckard-slide" data-deckard-transition="fall">
                     <h2>Slide 3</h2>
                     <p>This is another deckard slide.</p>
                     <p>
                         I have a different animation style to the default.  The
                         change in animation was specified declaritively in my
                         HTML by adding this attribute:<br/>
-                        <code>data-deckard-animation="fall"</code>
+                        <code>data-deckard-transition="fall"</code>
                     </p>
                     <p>
                         Note the change in direction as you navigate into and
                         out of this slide forwards and backwards.
                     </p>
                 </li>
-                <li class="deckard-item" data-deckard-animation="fall">
+                <li class="deckard-slide" data-deckard-transition="fall">
                     <h2>Slide 4</h2>
                     <p>This is another deckard slide.</p>
                     <p>
-                        I also have the "fall" animation applied.
+                        I also have the "fall" transition applied.
                     </p>
                 </li>
-                <li class="deckard-item">
+                <li class="deckard-slide">
                     <h2>Slide 5</h2>
                     <p>This is another deckard slide.</p>
                     <p>
@@ -81,7 +81,7 @@
 
         <script>
             Deckard = {
-                animation: 'fade',
+                transition: 'fade',
                 duration: 1000
             };
         </script>

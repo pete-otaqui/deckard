@@ -34,13 +34,13 @@ html, body {
     padding: 1em 1.5em;
 }
 .deckard-holder,
-.deckard-set {
+.deckard-slides {
     height: 100%;
 }
-.deckard-set {
+.deckard-slides {
     padding-bottom: 12px;   
 }
-.deckard-item {
+.deckard-slide {
     background-color: #eee;
     border: 1px solid #ccc;
     text-align: center;

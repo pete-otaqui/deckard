@@ -1,21 +1,21 @@
-.deckard-set,
-.deckard-set:before,
-.deckard-set:after,
-.deckard-set *,
-.deckard-set *:before,
-.deckard-set *:after {
+.deckard-slides,
+.deckard-slides:before,
+.deckard-slides:after,
+.deckard-slides *,
+.deckard-slides *:before,
+.deckard-slides *:after {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 }
-.deckard-set {
+.deckard-slides {
     width: 100%;
     min-height: 300px;
     position: relative;
     margin: 0;
     padding: 0;
 }
-.deckard-item {
+.deckard-slide {
     position: absolute;
     height: 100%;
     width: 100%;
@@ -23,6 +23,6 @@
     margin: 0;
     padding: 0;
 }
-.deckard-item.active {
+.deckard-slide.active {
     display: block;
 }

@@ -47,8 +47,9 @@
         }
     };
     D.config = {
-        animation: 'slide',
+        transition: 'slide',
         duration: 400,
+        ease: 'linear',
         log_level: D.constants.LOG_INFO,
         key_list_next : [13, 32, 39, 40],
         key_list_previous: [37, 38],
@@ -60,8 +61,8 @@
             previous: '*[data-deckard-navigation="previous"]',
             next: '*[data-deckard-navigation="next"]',
             navigation_items: '*[data-deckard-navigation="items"]',
-            set: '.deckard-set',
-            item: '.deckard-item'
+            set: '.deckard-slides',
+            item: '.deckard-slide'
         }
     };
 
@@ -94,8 +95,8 @@
         }
         deck.navigating = true;
         var direction = (deck.current===null) ? 1 : index - deck.current;
-        var anim_in = D.getAnimationIn(deck, index, direction);
-        var anim_out = D.getAnimationOut(deck, index, direction);
+        var animIn = D.getAnimationIn(deck, index, direction);
+        var animOut = D.getAnimationOut(deck, index, direction);
         D.animateIn(deck, index, direction);
         if ( deck.current !== null ) {
             D.animateOut(deck, deck.current, direction);
@@ -112,42 +113,42 @@
     /*************************************
      ANIMATION
     *************************************/
-    D.getAnimationNameForElement = function(deck, el) {
-        var el_anim = el.getAttribute('data-deckard-animation');
+    D.getTransitionNameForElement = function(deck, el) {
+        var el_anim = el.getAttribute('data-deckard-transition');
         var anim;
         if ( el_anim ) {
             anim = el_anim;
-        } else if ( deck.animation ) {
-            anim = deck.animation;
+        } else if ( deck.transition ) {
+            anim = deck.transition;
         } else {
-            anim = D.config.animation;
+            anim = D.config.transition;
         }
         return anim;
     };
 
     D.getAnimationIn = function(deck, index, direction) {
-        var set = D.getAnimationSet(deck, index);
-        var anim = D.getAnimationFromSet(set, 'in', direction);
+        var transition = D.getTransition(deck, index);
+        var anim = D.getAnimationFromTransition(transition, 'in', direction);
         return anim;
     };
     D.getAnimationOut = function(deck, index, direction) {
-        var set = D.getAnimationSet(deck, index);
-        var anim = D.getAnimationFromSet(set, 'out', direction);
+        var transition = D.getTransition(deck, index);
+        var anim = D.getAnimationFromTransition(transition, 'out', direction);
         return anim;
     };
-    D.getAnimationSet = function(deck, index) {
+    D.getTransition = function(deck, index) {
         var el = deck.slides.item(index);
-        var anim = D.getAnimationNameForElement(deck, el);
-        return D.animation_sets[anim];
+        var anim = D.getTransitionNameForElement(deck, el);
+        return D.transitions[anim];
     };
-    D.getAnimationFromSet = function(set, in_or_out, dir) {
+    D.getAnimationFromTransition = function(transition, in_or_out, dir) {
         var a_in, a_out;
-        if ( set.anim_in_forward ) {
-            a_in = (dir >= 0) ? set.anim_in_forward : set.anim_in_backward;
-            a_out = (dir >= 0 ) ? set.anim_out_forward : set.anim_out_backward;
+        if ( transition.animInForward ) {
+            a_in = (dir >= 0) ? transition.animInForward : transition.animInBackward;
+            a_out = (dir >= 0 ) ? transition.animOutForward : transition.animOutBackward;
         } else {
-            a_in = set.anim_in;
-            a_out = set.anim_out;
+            a_in = transition.animIn;
+            a_out = transition.animOut;
         }
         return ( in_or_out === 'in' ) ? a_in : a_out;
     };
@@ -278,26 +279,26 @@
     D.makeAnimationGroup('fadeOutAndUpFromOne', ['fadeOut', 'scaleUpFromOne']);
 
 
-    D.animation_sets = {};
-    D.makeInOutSet = function(name, fns) {
-        D.animation_sets[name] = fns;
+    D.transitions = {};
+    D.makeTransitions = function(name, fns) {
+        D.transitions[name] = fns;
     }
-    D.makeInOutSet('slide', {
-        anim_in_forward: D.animations.fadeInFromRight,
-        anim_out_forward: D.animations.fadeOutToLeft,
-        anim_in_backward: D.animations.fadeInFromLeft,
-        anim_out_backward: D.animations.fadeOutToRight
+    D.makeTransitions('slide', {
+        animInForward: D.animations.fadeInFromRight,
+        animOutForward: D.animations.fadeOutToLeft,
+        animInBackward: D.animations.fadeInFromLeft,
+        animOutBackward: D.animations.fadeOutToRight
     });
-    D.makeInOutSet('fade', {
-        anim_in: D.animations.fadeIn,
-        anim_out: D.animations.fadeOut
+    D.makeTransitions('fade', {
+        animIn: D.animations.fadeIn,
+        animOut: D.animations.fadeOut
     });
 
-    D.makeInOutSet('fall', {
-        anim_in_forward: D.animations.fadeInAndDownToOne,
-        anim_out_forward: D.animations.fadeOutAndDownFromOne,
-        anim_in_backward: D.animations.fadeInAndUpToOne,
-        anim_out_backward: D.animations.fadeOutAndUpFromOne
+    D.makeTransitions('fall', {
+        animInForward: D.animations.fadeInAndDownToOne,
+        animOutForward: D.animations.fadeOutAndDownFromOne,
+        animInBackward: D.animations.fadeInAndUpToOne,
+        animOutBackward: D.animations.fadeOutAndUpFromOne
     });
 
 
@@ -418,7 +419,7 @@
                 current: null,
                 navigating: false
             };
-            deck.animation = D.getAnimationNameForElement(deck, el);
+            deck.animation = D.getTransitionNameForElement(deck, el);
             deck.controls = {
                 previous: D.getNavigationPrevious(deck),
                 next: D.getNavigationNext(deck),

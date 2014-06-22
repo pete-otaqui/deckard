@@ -1,10 +1,13 @@
-# Deckard
-## A slide deck animation manager
+# Deckard - A Web Animations API driven slide deck library.
 
 I know what you're thinking - the last thing the world needs is another
 javascript slide deck library.
 
-Deckard is a little different though, because it uses the Web Animations API.
+Deckard is a little different though, because it uses the
+[Web Animations](http://dev.w3.org/fxtf/web-animations/) API.  It doesn't have
+any dependencies, except the
+[Web Animations Polyfill](https://github.com/web-animations/web-animations-js)
+if you want to support browsers that haven't implemented the API.
 
 ## Demos
 
@@ -94,7 +97,7 @@ my_custom_transition = {
 As you might gather, you need to start by creating animation functions.
 
 
-### Why do I have to create custom animation functions? 
+### Why don't I use the Web Animations API directly? 
 
 Deckard uses "function currying", so that you don't need to pass in an element
 in order to create animations or animation groups (normally you do need to do
@@ -122,12 +125,9 @@ function makeAnimation(props_array, options) {
 
 ### Complete Transition example
 
-Deckard actually uses an extra first parameter as the "name".  Running the code
-below will enable a new transition in Deckard which you can use as the
-`data-deckard-transition` attribute.
+Deckard actually uses an extra first parameter as the "name".
 
 ```js
-
 // Now we can compose animation functions like this:
 
 Deckard.makeAnimation(
@@ -145,6 +145,11 @@ Deckard.makeTransition('slowFade', {
     animIn: 'slowFadeIn',
     animOut: 'slowFadeOut'
 });
+```
 
+Running the code above will enable a new transition in Deckard which you can use
+in your HTML like so:
 
+```html
+<div class="deckard-slide" data-deckard-transition="slowFade">/* ... */</div>
 ```

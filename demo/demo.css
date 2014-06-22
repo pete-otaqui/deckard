@@ -10,15 +10,18 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-size: 24px;
 }
 
 .demo-title {
     position: fixed;
     bottom: 0;
     right: 0;
-    padding: 1em 1.5em;
+    padding: 12px 24px;
     margin: 0;
     z-index: 3;
+    text-shadow: 0 1px #fff;
+    color: #333;
 }
 .deckard-controls {
     position: fixed;
@@ -31,8 +34,12 @@ html, body {
 .deckard-set {
     height: 100%;
 }
+.deckard-set {
+    padding-bottom: 12px;
+}
 .deckard-item {
     background-color: #eee;
+    background-image: linear-gradient(to bottom, #eee, #ccc);
     border: 1px solid #ccc;
     text-align: center;
     height: 100%;

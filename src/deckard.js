@@ -47,6 +47,7 @@
         }
     };
     D.config = {
+        animation: 'fall',
         duration: 300,
         log_level: D.constants.LOG_INFO,
         key_list_next : [13, 32, 39, 40],
@@ -82,7 +83,7 @@
         }
     };
     D.showDeckIndex = function(deck, index) {
-        D.info('D.showDeckIndex', deck, index);
+        D.debug('D.showDeckIndex', deck, index);
         if ( index === deck.current ) {
             D.debug('not showing index because we are already showing it');
             return;
@@ -111,6 +112,18 @@
     /*************************************
      ANIMATION
     *************************************/
+    D.getAnimationNameForElement = function(deck, el) {
+        var el_anim = el.getAttribute('data-deckard-animation');
+        var anim;
+        if ( el_anim ) {
+            anim = el_anim;
+        } else if ( deck.animation ) {
+            anim = deck.animation;
+        } else {
+            anim = D.config.animation;
+        }
+        return anim;
+    };
 
     D.getAnimationIn = function(deck, index, direction) {
         var set = D.getAnimationSet(deck, index);
@@ -123,7 +136,9 @@
         return anim;
     };
     D.getAnimationSet = function(deck, index) {
-        return D.animation_sets.fall;
+        var el = deck.slides.item(index);
+        var anim = D.getAnimationNameForElement(deck, el);
+        return D.animation_sets[anim];
     };
     D.getAnimationFromSet = function(set, in_or_out, dir) {
         var a_in, a_out;
@@ -144,8 +159,9 @@
         var anim_fn = D.getAnimationIn(deck, index, direction);
         var anim = anim_fn(slide);
         var player = document.timeline.play(anim);
+        window.player = player;
         player.addEventListener('finish', function(ev) {
-            D.debug('finished animateSlideIn', ev);
+            // D.info('finished animateSlideIn', ev);
             deck.navigating = false;
         });
     };
@@ -205,24 +221,24 @@
     D.makeAnimation('slideToLeft',
         [
             {transform: 'translate(0, 0)'},
-            {transform: 'translate(-20px, 0)'}
+            {transform: 'translate(-40px, 0)'}
         ]
     );
     D.makeAnimation('slideFromLeft',
         [
-            {transform: 'translate(-20px, 0)'},
+            {transform: 'translate(-40px, 0)'},
             {transform: 'translate(0, 0)'}
         ]
     );
     D.makeAnimation('slideToRight',
         [
             {transform: 'translate(0, 0)'},
-            {transform: 'translate(20px, 0)'}
+            {transform: 'translate(40px, 0)'}
         ]
     );
     D.makeAnimation('slideFromRight',
         [
-            {transform: 'translate(20px, 0)'},
+            {transform: 'translate(40px, 0)'},
             {transform: 'translate(0, 0)'}
         ]
     );
@@ -399,6 +415,7 @@
                 current: null,
                 navigating: false
             };
+            deck.animation = D.getAnimationNameForElement(deck, el);
             deck.controls = {
                 previous: D.getNavigationPrevious(deck),
                 next: D.getNavigationNext(deck),

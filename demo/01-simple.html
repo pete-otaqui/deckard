@@ -2,13 +2,14 @@
 <html lang="en">
     <head>
         <title>Deckard Demo - 01 Simple</title>
+        <meta charset="utf-8" />
         <link rel="stylesheet" type="text/css" href="../src/deckard.css" />
         <link rel="stylesheet" type="text/css" href="demo.css" />
     </head>
     <body>
         <h1>Deckard Demo - 01 Simple</h1>
         <div class="container">
-            <div class="deckard-holder">
+            <div class="deckard-holder" data-deckard-animation="slide">
                 <nav class="deckard-controls">
                     <a href="#prev" data-deckard-navigation="previous">Previous</a>
                     <a href="#next" data-deckard-navigation="next">Next</a>
@@ -17,7 +18,7 @@
                         data-deckard-navigation="items">
                     </ul>
                 </nav>
-                <ul class="deckard-set" data-deckard-transition="slide">
+                <ul class="deckard-set">
                     <li class="deckard-item">
                         <h2>Slide 1</h2>
                         <p>This is a deckard slide.</p>
@@ -27,12 +28,11 @@
                             which is why I slid in from the left.
                         </p>
                     </li>
-                    <li class="deckard-item">
+                    <li class="deckard-item" data-deckard-animation="fall">
                         <h2>Slide 2</h2>
                         <p>This is another deckard slide.</p>
                         <p>
-                            It doesn't do much, but uses the same default transition
-                            as the first.
+                            I have a different animation style to the default.
                         </p>
                     </li>
                     <li class="deckard-item">
@@ -43,7 +43,7 @@
                             as the first.
                         </p>
                     </li>
-                    <li class="deckard-item" data-deckard-transition="fall">
+                    <li class="deckard-item">
                         <h2>Slide 4</h2>
                         <p>This is another deckard slide.</p>
                         <p>

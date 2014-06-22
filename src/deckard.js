@@ -267,6 +267,30 @@
             {transform:'scale(1, 1)'}
         ]
     );
+    D.makeAnimation('dropDownOut', 
+        [
+            {transform:'translate(0, 0)'},
+            {transform:'translate(0, 40px)'}
+        ]
+    );
+    D.makeAnimation('dropDownIn', 
+        [
+            {transform:'translate(0, -40px)'},
+            {transform:'translate(0, 0)'}
+        ]
+    );
+    D.makeAnimation('pullUpIn', 
+        [
+            {transform:'translate(0, 40px)'},
+            {transform:'translate(0, 0)'}
+        ]
+    );
+    D.makeAnimation('pullUpOut', 
+        [
+            {transform:'translate(0, 0)'},
+            {transform:'translate(0, -40px)'}
+        ]
+    );
 
     D.makeAnimationGroup('fadeOutToLeft', ['fadeOut', 'slideToLeft']);
     D.makeAnimationGroup('fadeOutToRight', ['fadeOut', 'slideToRight']);
@@ -277,6 +301,11 @@
     D.makeAnimationGroup('fadeOutAndDownFromOne', ['fadeOut', 'scaleDownFromOne']);
     D.makeAnimationGroup('fadeInAndUpToOne', ['fadeIn', 'scaleUpToOne']);
     D.makeAnimationGroup('fadeOutAndUpFromOne', ['fadeOut', 'scaleUpFromOne']);
+
+    D.makeAnimationGroup('fadeInAndDropDown', ['fadeIn', 'dropDownIn']);
+    D.makeAnimationGroup('fadeOutAndDropDown', ['fadeOut', 'dropDownOut']);
+    D.makeAnimationGroup('fadeInPullUp', ['fadeIn', 'pullUpIn']);
+    D.makeAnimationGroup('fadeOutAndPullUp', ['fadeOut', 'pullUpOut']);
 
 
     D.transitions = {};
@@ -293,12 +322,17 @@
         animIn: D.animations.fadeIn,
         animOut: D.animations.fadeOut
     });
-
     D.makeTransitions('fall', {
         animInForward: D.animations.fadeInAndDownToOne,
         animOutForward: D.animations.fadeOutAndDownFromOne,
         animInBackward: D.animations.fadeInAndUpToOne,
         animOutBackward: D.animations.fadeOutAndUpFromOne
+    });
+    D.makeTransitions('drop', {
+        animInForward: D.animations.fadeInAndDropDown,
+        animOutForward: D.animations.fadeOutAndDropDown,
+        animInBackward: D.animations.fadeInPullUp,
+        animOutBackward: D.animations.fadeOutAndPullUp
     });
 
 

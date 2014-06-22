@@ -72,6 +72,7 @@ The default transitions, which you can define as described above are:
 * slide (Deckard's own default)
 * fade
 * fall
+* drop
 
 
 ## Creating Animations and Transitions

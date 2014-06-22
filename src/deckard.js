@@ -47,7 +47,7 @@
         }
     };
     D.config = {
-        animation: 'fall',
+        animation: 'slide',
         duration: 400,
         log_level: D.constants.LOG_INFO,
         key_list_next : [13, 32, 39, 40],
@@ -328,7 +328,11 @@
         if ( context.Deckard ) {
             // @TODO implement this!
             D.warn('Deckard config overrides are not currently implemented');
-            D.config_overrides = context.Deckard;
+            var key;
+            for ( key in context.Deckard ) {
+                console.log(key);
+                D.config[key] = context.Deckard[key];
+            }
         }
         if ( context.module && context.module.exports ) {
             context.module.exports = D;

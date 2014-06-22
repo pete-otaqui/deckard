@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>Deckard Demo - 01 Simple</title>
+        <title>Deckard Demo - 02 Config</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" type="text/css" href="../src/deckard.css" />
         <link rel="stylesheet" type="text/css" href="demo.css" />
     </head>
     <body>
-        <h1 class="demo-title">Deckard Demo - 01 Simple</h1>
+        <h1 class="demo-title">Deckard Demo - 02 Config</h1>
 
         <div class="deckard-holder">
             <nav class="deckard-controls">
@@ -26,15 +26,17 @@
                         slides.
                     </p>
                     <p>
-                        The "set" uses the standard transition between slides,
-                        which is why I slid in from the right, and I will slide
-                        out to the left.  These directions reverse if you come
-                        back to this slide.
+                        This page contains some Deckard config overrides, which
+                        are specified by defining <code>Deckard</code> before
+                        including the script, like so:
                     </p>
-                    <p>
-                        You can click anywhere to go forward, or use the
-                        navigation links, or the arrow keys, or the "return" or
-                        "spacebar" keys.  They should all be fairly intuitive.
+                    <p class="align-left">
+                        <code>
+                            &lt;script&gt;<br/>
+                            &nbsp;&nbsp;Deckard = { animation:'fade' };<br/>
+                            &lt;/script&gt;<br/>
+                            &lt;script src="deckard.js"&gt;&lt;/script&gt;
+                        </code>
                     </p>
                 </li>
                 <li class="deckard-item">
@@ -77,6 +79,12 @@
             </ul>
         </div><!-- .deckard-holder -->
 
+        <script>
+            Deckard = {
+                animation: 'fade',
+                duration: 1000
+            };
+        </script>
         <script src="../src/web-animations.js"></script>
         <script src="../src/deckard.js"></script>
         <script>
